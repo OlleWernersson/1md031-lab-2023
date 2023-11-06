@@ -1,3 +1,77 @@
 div {
-    background-color: powderblue;
+    /*background-color: powderblue;*/
+}
+/* Comment */
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    color: black;
+    font-size:40px;
+    font-style: italic;
+    /*font-weight:normal;*/
+    /*text-align: center;*/
+    position: absolute;
+    /*top: 50px*/
+    margin-top: -310px;
+}
+header {
+    margin-left: 15px;
+    margin-right: 5px;
+    height: 200px;
+    overflow: hidden;
+}
+#hi {
+    opacity: 0.5;
+    width: 100%;
+    height: auto;
+    margin-top: -400px;
+}
+
+body {
+    font-family: arial;
+    font-size: 1.2em;
+ }
+.Burgers { 
+    /*color: midnightblue;*/
+    background-color: black;
+    color:white;
+    border: 2px dashed white;
+    padding-left: 20px;
+}
+.Burgers div {
+    margin-left:20px;
+    margin-right: 20px;
+}
+.Burgers div h3 {
+    text-align: center;
+}
+#gluten {
+    font-weight: bold;
+}
+#lactose {
+    font-weight: bold;
+}
+#ci {
+    /*background-color: black;
+    color:white;*/
+    border: 2px dashed black;
+    padding-left: 20px;
+}
+li:contains('Gluten') { /* Hur får man detta att funka?*/
+    font-weight: bold;
+}
+button:hover {
+    background-color: greenyellow;
+    color:green;
+    cursor:pointer
+}
+button {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+section {
+    margin-left: 10px;
+}
+select {
+    background-color: pink;
 }
