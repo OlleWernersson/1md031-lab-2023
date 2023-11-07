@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="script.js" defer></script>
         <title>Order Burger</title>
         <meta charset="utf-8"/>
     </head>
@@ -14,50 +15,52 @@
             <section class="Burgers">
                 <h3>Select burger</h3>
                 <p>Here is where you select what burger to order</p>
-                <div style="display: inline-block;">
-                    <h3>Fire Burger</h3>
-                    <img src="https://th.bing.com/th/id/OIG.rZ4X1n2siZAGR9wdcM0P?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" style=width:200px;>
-                    <dl>
-                        <dt>Ingredients:</dt>
-                        <dd>
-                            <ul>
-                                <li>Chilli</li>
-                                <li id="gluten">Gluten</li>
-                                <li id="lactose">Lactose</li>
-                                <li>Many Calories</li>
-                            </ul>
-                        </dd>
-                    </dl> 
-                </div>
-                <div style="display: inline-block;">
-                    <h3>Green Burger</h3>
-                    <img src="https://th.bing.com/th/id/OIG.V9OLc5KDmvzwwgYDUVOV?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" style=width:200px;>
-                    <dl>
-                        <dt>Ingredients:</dt>
-                        <dd>
-                            <ul>
-                                <li></li>
-                                <li>Avocado</li>
-                                <li>Fake Meat</li>
-                                <li>Many Calories</li>
-                            </ul>
-                        </dd>
-                    </dl> 
-                </div>
-                <div style="display: inline-block;">
-                    <h3>Hallumi Burger</h3>
-                    <img src="https://th.bing.com/th/id/OIG.K5olM7gN7UnYCVmcBm0u?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" style=width:200px;>
-                    <dl>
-                        <dt>Ingredients:</dt>
-                        <dd>
-                            <ul>
-                                <li id="gluten">Gluten</li>
-                                <li id="lactose">Lactose</li>
-                                <li>Meat</li>
-                                <li>Less Calories</li>
-                            </ul>
-                        </dd>
-                    </dl> 
+                <div class="wrapper">
+                    <div class="box a">
+                        <h3>Fire Burger</h3>
+                        <img src="https://th.bing.com/th/id/OIG.rZ4X1n2siZAGR9wdcM0P?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" style=width:200px;>
+                        <dl>
+                            <dt>Ingredients:</dt>
+                            <dd>
+                                <ul>
+                                    <li>Chilli</li>
+                                    <li id="gluten">Gluten</li>
+                                    <li id="lactose">Lactose</li>
+                                    <li>Many Calories</li>
+                                </ul>
+                            </dd>
+                        </dl> 
+                    </div>
+                    <div class="box b">
+                        <h3>Green Burger</h3>
+                        <img src="https://th.bing.com/th/id/OIG.V9OLc5KDmvzwwgYDUVOV?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" style=width:200px;>
+                        <dl>
+                            <dt>Ingredients:</dt>
+                            <dd>
+                                <ul>
+                                    <li id="skills"></li>
+                                    <li>Avocado</li>
+                                    <li>Fake Meat</li>
+                                    <li>Many Calories</li>
+                                </ul>
+                            </dd>
+                        </dl> 
+                    </div>
+                    <div class="box c">
+                        <h3>Hallumi Burger</h3>
+                        <img src="https://th.bing.com/th/id/OIG.K5olM7gN7UnYCVmcBm0u?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" style=width:200px;>
+                        <dl>
+                            <dt>Ingredients:</dt>
+                            <dd>
+                                <ul>
+                                    <li id="gluten">Gluten</li>
+                                    <li id="lactose">Lactose</li>
+                                    <li>Meat</li>
+                                    <li>Less Calories</li>
+                                </ul>
+                            </dd>
+                        </dl> 
+                    </div>
                 </div>
             </section>
             <section id="ci">
