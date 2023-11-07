@@ -23,7 +23,7 @@ for (let skill of skills) {
     myLi = document.createElement("li")
     myLi.textContent = skill.skill
     mySpan = document.createElement("span")
-    mySpan.setAttribute("class", skill.proficiency)
+    mySpan.setAttribute("class", skill.proficiency.replace(/\s/g, '')) //remove space.
     mySpan.textContent = " " + skill.proficiency
     myLi.appendChild(mySpan)
     document.getElementById("skills").appendChild(myLi)
