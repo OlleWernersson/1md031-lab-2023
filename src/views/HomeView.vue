@@ -18,6 +18,20 @@ import io from 'socket.io-client'
 
 const socket = io();
 
+function MenuItem(name, KCal, url, lactose, gluten) {
+  this.name = name;
+  this.url = url;
+  this.Kcal = KCal;
+  this.lactose = lactose;
+  this.gluten = gluten;
+}
+
+let Burgers = [MenuItem("Fire Burger",3000,"pic",True,True),
+MenuItem("Green Burger",3000,"pic",False,False),
+MenuItem("Hallumi Burger",1000,"pic",True,True)];
+
+console.log(Burgers)
+
 export default {
   name: 'HomeView',
   components: {
