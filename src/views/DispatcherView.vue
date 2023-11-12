@@ -1,18 +1,29 @@
 <template>
   <div id="orders">
     <div id="orderList">
-      <div v-for="(order, key) in orders" v-bind:key="'order'+key">
-        #{{ key }}: {{ order.orderItems.join(", ") }} <button>New Order</button>
+      <div v-for="(order, key) in orders" :key="'order'+key" class="order-container">
+        <span class="order-info">#{{ key }}:</span>
+        <div v-for="(item, index) in order.orderItems" :key="'item' + index" class="order-item">
+          {{ item.name }}: {{ item.quantity }}
+        </div>
+        <button class="new-order-button">New Order</button>
+        <div class="personal-info">
+          {{ order.personalInfo.fullName }},
+          {{ order.personalInfo.email }},
+          {{ order.personalInfo.gender }},
+          {{ order.personalInfo.paymentMethod }}
+        </div>
       </div>
-      <button v-on:click="clearQueue">Clear Queue</button>
+      <button v-on:click="clearQueue" class="clear-orders-button">Clear Orders</button>
     </div>
     <div id="dots" v-bind:style="{ background: 'url(' + require('../../public/img/polacks.jpg')+ ')' }">
-        <div v-for="(order, key) in orders" v-bind:style="{ left: order.details.x + 'px', top: order.details.y + 'px'}" v-bind:key="'dots' + key">
-          {{ key }}
-        </div>
+      <div v-for="(order, key) in orders" v-bind:style="{ left: order.details.x + 'px', top: order.details.y + 'px'}" v-bind:key="'dots' + key">
+        {{ key }}
+      </div>
     </div>
   </div>
 </template>
+
 <script>
 import io from 'socket.io-client'
 const socket = io();
@@ -35,6 +46,7 @@ export default {
   }
 }
 </script>
+
 <style>
 #orderList {
   top:1em;
@@ -45,6 +57,7 @@ export default {
   background: rgba(255,255,255, 0.5);
   padding: 1em;
 }
+
 #dots {
   position: relative;
   margin: 0;
@@ -54,7 +67,34 @@ export default {
   height: 1078px;
   cursor: crosshair;
 }
+.order-container {
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid darkgrey; /* Add this line for the border */
+}
 
+.order-info {
+  margin-right: 10px;
+}
+
+.order-item {
+  display: inline;
+  margin-right: 10px;
+}
+
+.personal-info {
+  font-style: italic;
+}
+
+.new-order-button {
+  margin-left: auto;
+  margin-top: -20px;
+  margin-bottom: 0px;
+}
+
+.clear-orders-button {
+  margin-top: 10px;
+}
 #dots div {
   position: absolute;
   background: black;

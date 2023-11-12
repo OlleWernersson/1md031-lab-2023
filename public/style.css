@@ -3,10 +3,6 @@
         font-size: 6vw;
     }
 }
-div {
-    /*background-color: powderblue;*/
-}
-/* Comment */
 h1 {
     font-family: 'Open Sans', sans-serif;
     color:chocolate;
@@ -70,17 +66,6 @@ body {
     padding: 20px;
     font-size: 100%;
 }
-.a {
-    /*grid-column: 1;*/
-    /*background-image: url("img/fireburger.jpg");*/
-}
-.b {
-    /*grid-column: 2;*/
-}
-.c {
-    /*grid-column:3;
-    grid-row:1;*/
-}
 #gluten {
     font-weight: bold;
 }
@@ -106,9 +91,6 @@ button {
     margin-top: 20px;
     margin-left: 20px;
     margin-bottom: 20px;
-}
-section {
-    /*margin-left: 10px;*/
 }
 select {
     background-color: pink;

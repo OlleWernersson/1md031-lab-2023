@@ -26,12 +26,11 @@
         <input type="email" id="email" v-model="Email" required="required" placeholder="E-mail address">
       </p>
       <p>
-        <label for="Streetname">Street</label><br>
-        <input type="text" id="streetname" v-model="streetName" required="required" placeholder="Street name">
-      </p>
-      <p>
-        <label for="House">House</label><br>
-        <input type="number" id="House" v-model="houseNumber" required="required" placeholder="House number">
+        Please indicate point of delivery:
+        <div id="map" v-on:click="setLocation" ref="map">
+          <img src="../../public/img/polacks.jpg">
+          <div ref="dot" class="dot"><a id="Target">T</a></div>
+        </div>
       </p>
       <p>
         <label for="paymentmethod">Payment Method</label><br>
@@ -59,23 +58,21 @@
           Non-Binary
         </label>
         <br>
-        <button type="submit">
-          <img src="https://th.bing.com/th/id/OIP.6KI4O9iZJg0ZFOPp4Nn5iQHaHa?w=190&h=190&c=7&r=0&o=5&pid=1.7">
-          Place my order!
-        </button>
-        <a><br>
+        <!-- <a><br>
           Gender: {{ selectedGender }}<br>
           {{ burgers[0].name }}: {{ orderedBurgers[burgers[0].name] }}<br>
           {{ burgers[1].name }}: {{ orderedBurgers[burgers[1].name] }}<br>
           {{ burgers[2].name }}: {{ orderedBurgers[burgers[2].name] }}<br>
-          House Number: {{ houseNumber }}<br>
           Payment Method: {{ paymentMethod }}<br>
-          Street: {{ streetName }}<br>
           Email: {{ Email }}<br>
           Full Name: {{ fullName }}<br>
-        </a>
+        </a> -->
       </form>
     </section>
+    <button type="submit" v-on:click="submitForm">
+      <img src="https://th.bing.com/th/id/OIP.6KI4O9iZJg0ZFOPp4Nn5iQHaHa?w=190&h=190&c=7&r=0&o=5&pid=1.7">
+      Place my order!
+    </button>
   </main>
   <footer>
   
@@ -117,24 +114,63 @@ export default {
       burgers: Burgers,
       selectedGender: null,
       paymentMethod: "Swish",
-      houseNumber: null,
-      streetName: null,
       Email: null,
       fullName: null,
       Burger: Burger,
-      orderedBurgers: {"Fire Burger": 0,"Green Burger": 0,"Halloumi Burger": 0,}
+      orderedBurgers: {"Fire Burger": 0,"Green Burger": 0,"Halloumi Burger": 0,},
+      location: { x: 0,
+                  y: 0
+                },
+      dotSize: 20,
     }
   },
   methods: {
     submitForm() {
-      console.log("Selected gender:", this.selectedGender);
+      const orderDetails = {
+        orderId: this.getOrderNumber(),
+        details: {
+          x: this.location.x,
+          y: this.location.y,
+        },
+        orderItems: Object.keys(this.orderedBurgers)
+        .filter((burger) => this.orderedBurgers[burger] > 0)
+        .map((burger) => ({ name: burger, quantity: this.orderedBurgers[burger] })),
+        personalInfo: {
+          fullName: this.fullName,
+          email: this.Email,
+          gender: this.selectedGender,
+          paymentMethod: this.paymentMethod
+        }
+      };
+
+      socket.emit("addOrder", orderDetails);
     },
+
     addToOrder($event) {
       this.orderedBurgers[$event.name] = $event.amount;
     },
     getOrderNumber: function () {
       return Math.floor(Math.random()*100000);
     },
+    setLocation(event) {
+      const mapRect = this.$refs.map.getBoundingClientRect();
+      this.location = {
+        x: event.clientX + this.$refs.map.scrollLeft - mapRect.left,
+        y: event.clientY + this.$refs.map.scrollTop - mapRect.top,
+      };
+      this.updateDotPosition();
+    },
+
+
+
+    updateDotPosition() {
+      const dot = this.$refs.dot;
+      if (dot) {
+        dot.style.left = this.location.x - this.dotSize / 2 + "px";
+        dot.style.top = this.location.y - this.dotSize / 2 + "px";
+      }
+    },
+
     addOrder: function (event) {
       var offset = {x: event.currentTarget.getBoundingClientRect().left,
                     y: event.currentTarget.getBoundingClientRect().top};
@@ -165,6 +201,8 @@ h1 {
 }
 header {
     background-image: url("../../public/img/header.jpg");
+/*     background-repeat:no-repeat;
+    background-size: 100% 100%; */
     height: 200px;
     overflow: hidden;
 }
@@ -217,5 +255,22 @@ button img {
 }
 select {
     background-color: pink;
+}
+#map {
+  position: relative;
+  overflow: scroll;
+  height: 500px;
+  width: 100%;
+}
+.dot {
+  position: absolute;
+  width: 20px; 
+  height: 20px; 
+  background-color: black;
+  border-radius: 50%;
+}
+#Target {
+  color:white;
+  margin-left: 4px;
 }
 </style>
