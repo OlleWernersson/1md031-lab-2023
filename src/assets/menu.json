@@ -1,0 +1,27 @@
+
+[
+    {
+        "name": "Fire Burger",
+        "kCal": "3000",
+        "lactose": true,
+        "gluten": true,
+        "url": "img/fireburger.jpg",
+        "ingredients": ["Chilli","Gluten","Lactose","kCal:3000"]
+    },
+    {
+        "name": "Green Burger",
+        "kCal": "3000",
+        "lactose": false,
+        "gluten": false,
+        "url": "/img/greenburger.jpg",
+        "ingredients": ["Avocado", "Fake Meat","kCal:3000"]
+    },
+    {
+        "name": "Halloumi Burger",
+        "kCal": "1000",
+        "lactose": true,
+        "gluten": true,
+        "url": "img/halloumiburger.jpg",
+        "ingredients": ["Gluten","Lactose","kCal:1000"]
+    }
+]

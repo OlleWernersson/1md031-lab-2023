@@ -1,69 +1,81 @@
 <template>
   <header>
-  <!--    <img src="https://th.bing.com/th/id/OIG.ZE1ZhIyJQfzIPwvPELIW?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" id="hi"> -->
-      <h1>Welcome to BurgerOnline</h1>
+    <h1>Welcome to BurgerOnline</h1>
   </header>
   <main>
-      <section class="Burgers">
-          <h3>Select burger</h3>
-          <p>Here is where you select what burger to order</p>
-          <div class="wrapper">
-            <Burger v-for="burger in Burgers">
-            </Burger>
-          </div>
-      </section>
-      <section id="ci">
-          <h3>Customer information</h3>
-          <p>Here is where you select your informations so that we can deliver the burger</p>
-          <p>
-              <label for="firstnamelastname">Full name</label><br>
-              <input type="text" id="firstnamelastname" name="fnln" required="required" placeholder="First- and Last name">
-          </p>
-          <p>
-              <label for="email">Email</label><br>
-              <input type="email" id="email" name="em" required="required" placeholder="E-mail address">
-          </p>
-          <p>
-              <label for="Streetname">Street</label><br>
-              <input type="text" id="streetname" name="sn" required="required" placeholder="Street name">
-          </p>
-          <p>
-              <label for="House">House</label><br>
-              <input type="number" id="House" name="h" required="required" placeholder="House number">
-
-          </p>
-          <p>
-              <label for="paymentmethod">Payment Method</label><br>
-              <select id="paymentmethod" name="pm">
-                  <option selected="selected">Swish</option>
-                  <option>Card</option>
-                  <option>Crypto</option>
-                  <option>Bank</option>
-              </select>
-          </p>
-          <a>Gender</a><br>
-          <form>
-              <label>
-                  <input type="radio" name="gender" value="male">
-                  Male
-              </label>
-              <br>
-              <label>
-                  <input type="radio" name="gender" value="female">
-                  Female
-              </label>
-              <br>
-              <label>
-                  <input type="radio" name="gender" value="nonbinary">
-                  Non-Binary
-              </label>
-          </form>
-          <br>
-      </section>
-      <button type="submit">
+    <section class="Burgers">
+      <h3>Select burger</h3>
+      <p>Here is where you select what burger to order</p>
+      <div class="wrapper">
+        <Burger v-for="burger in burgers"
+          v-bind:burger = "burger"
+          v-bind:key="burger.name"
+          v-on:orderedBurger="addToOrder($event)"> 
+        </Burger>
+      </div>
+    </section>
+    <section id="ci">
+      <h3>Customer information</h3>
+      <p>Here is where you select your informations so that we can deliver the burger</p>
+      <p>
+        <label for="firstnamelastname">Full name</label><br>
+        <input type="text" id="firstnamelastname" v-model="fullName" required="required" placeholder="First- and Last name">
+      </p>
+      <p>
+        <label for="email">Email</label><br>
+        <input type="email" id="email" v-model="Email" required="required" placeholder="E-mail address">
+      </p>
+      <p>
+        <label for="Streetname">Street</label><br>
+        <input type="text" id="streetname" v-model="streetName" required="required" placeholder="Street name">
+      </p>
+      <p>
+        <label for="House">House</label><br>
+        <input type="number" id="House" v-model="houseNumber" required="required" placeholder="House number">
+      </p>
+      <p>
+        <label for="paymentmethod">Payment Method</label><br>
+        <select id="paymentmethod" v-model="paymentMethod">
+          <option selected="selected">Swish</option>
+          <option>Card</option>
+          <option>Crypto</option>
+          <option>Bank</option>
+        </select>
+      </p>
+      <a>Gender</a><br>
+      <form @submit.prevent="submitForm">
+        <label>
+          <input type="radio" name="gender" value="male" v-model="selectedGender">
+          Male
+        </label>
+        <br>
+        <label>
+          <input type="radio" name="gender" value="female" v-model="selectedGender">
+          Female
+        </label>
+        <br>
+        <label>
+          <input type="radio" name="gender" value="nonbinary" v-model="selectedGender">
+          Non-Binary
+        </label>
+        <br>
+        <button type="submit">
           <img src="https://th.bing.com/th/id/OIP.6KI4O9iZJg0ZFOPp4Nn5iQHaHa?w=190&h=190&c=7&r=0&o=5&pid=1.7">
           Place my order!
-      </button>
+        </button>
+        <a><br>
+          Gender: {{ selectedGender }}<br>
+          {{ burgers[0].name }}: {{ orderedBurgers[burgers[0].name] }}<br>
+          {{ burgers[1].name }}: {{ orderedBurgers[burgers[1].name] }}<br>
+          {{ burgers[2].name }}: {{ orderedBurgers[burgers[2].name] }}<br>
+          House Number: {{ houseNumber }}<br>
+          Payment Method: {{ paymentMethod }}<br>
+          Street: {{ streetName }}<br>
+          Email: {{ Email }}<br>
+          Full Name: {{ fullName }}<br>
+        </a>
+      </form>
+    </section>
   </main>
   <footer>
   
@@ -73,25 +85,27 @@
 <script>
 import Burger from '../components/OneBurger.vue'
 import io from 'socket.io-client'
+import menu from '../assets/menu.json'
 
 const socket = io();
 
-function MenuItem(name, KCal, url, lactose, gluten) {
+function MenuItem(name, KCal, url, lactose, gluten, ingredients) {
   this.name = name;
   this.url = url;
-  this.Kcal = KCal;
-  this.lactose = lactose;
-  this.gluten = gluten;
+  this.KCal = KCal;
+  this.ingredients = ingredients;
+
+  if (gluten) this.ingredients.push("Gluten");
+  if (lactose) this.ingredients.push("Lactose");
+  this.ingredients.push(KCal + "kCal");
 }
 
-let Burgers = [
-  new MenuItem("Fire Burger", 3000, "../../public/img/fireburger.jpg", true, true),
-  new MenuItem("Green Burger", 3000, "../../public/img/greenburger.jpg", false, false),
-  new MenuItem("Hallumi Burger", 1000, "../../public/img/hallumiburger.jpg", true, true)
-];
 
-console.log(Burgers); //How to use this??
-
+let Burgers = [menu[0],menu[1],menu[2]]
+/*   new MenuItem("Fire Burger", "3000", "/img/fireburger.jpg", true, true,["Chilli"]),
+  new MenuItem("Green Burger", "3000", "/img/greenburger.jpg", false, false,["Avocado","Fake Meat"]),
+  new MenuItem("Halloumi Burger", "1000", "/img/halloumiburger.jpg", true, true,[])
+] */
 
 export default {
   name: 'HomeView',
@@ -100,10 +114,24 @@ export default {
   },
   data: function () {
     return {
-      burgers: Burgers
+      burgers: Burgers,
+      selectedGender: null,
+      paymentMethod: "Swish",
+      houseNumber: null,
+      streetName: null,
+      Email: null,
+      fullName: null,
+      Burger: Burger,
+      orderedBurgers: {"Fire Burger": 0,"Green Burger": 0,"Halloumi Burger": 0,}
     }
   },
   methods: {
+    submitForm() {
+      console.log("Selected gender:", this.selectedGender);
+    },
+    addToOrder($event) {
+      this.orderedBurgers[$event.name] = $event.amount;
+    },
     getOrderNumber: function () {
       return Math.floor(Math.random()*100000);
     },
@@ -128,7 +156,6 @@ export default {
     }
 }
 h1 {
-    font-family: 'Open Sans', sans-serif;
     color:chocolate;
     text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black, 2px 2px 0 black;
     font-size:40px;
@@ -140,12 +167,6 @@ header {
     background-image: url("../../public/img/header.jpg");
     height: 200px;
     overflow: hidden;
-}
-#hi { /*Header Image*/
-    opacity: 0.6;
-    width: 100%;
-    height: auto;
-    margin-top: -400px;
 }
 body {
     font-family: arial;
@@ -175,42 +196,11 @@ body {
     grid-template-columns: repeat(auto-fill, 250px);
     grid-template-rows: repeat(auto-fill, 450px);
     background-color: black;
-    color: red; /*??*/
-    padding: 10px;
 }
-.box {
-    background-color:darkslategray;
-    color: #fff;
-    border-radius: 5px;
-    padding: 20px;
-    font-size: 100%;
-}
-.a {
-    /*grid-column: 1;*/
-    /*background-image: url("img/fireburger.jpg");*/
-}
-.b {
-    /*grid-column: 2;*/
-}
-.c {
-    /*grid-column:3;
-    grid-row:1;*/
-}
-#gluten {
-    font-weight: bold;
-}
-#lactose {
-    font-weight: bold;
-}
-#ci {
-    /*background-color: black;
-    color:white;*/
+#ci { /* Customer Information*/
     border: 2px dashed black;
     padding:20px;
     margin-top: 10px;
-}
-li:contains('Gluten') { /* Hur får man detta att funka?*/
-    font-weight: bold;
 }
 button:hover {
     background-color: greenyellow;
@@ -225,13 +215,7 @@ button {
 button img {
   width: 20px;
 }
-section {
-    /*margin-left: 10px;*/
-}
 select {
     background-color: pink;
-}
-.VeryGood {
-    color: green
 }
 </style>
