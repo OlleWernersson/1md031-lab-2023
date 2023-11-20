@@ -124,7 +124,7 @@ export default {
       Email: null,
       fullName: null,
       Burger: Burger,
-      orderedBurgers: {"Fire Burger": 0,"Green Burger": 0,"Halloumi Burger": 0,},
+      orderedBurgers: {"Fire Burger": 0,"Green Burger": 0,"Halloumi Burger": 0},
       location: { x: 0,
                   y: 0
                 },
