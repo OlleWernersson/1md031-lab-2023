@@ -2,11 +2,11 @@
   <div id="orders">
     <div id="orderList">
       <div v-for="(order, key) in orders" :key="'order'+key" class="order-container">
-        <span class="order-info">#{{ key }}:</span>
+        <span class="order-info">#{{ order.orderId }}:</span>
         <div v-for="(item, index) in order.orderItems" :key="'item' + index" class="order-item">
           {{ item.name }}: {{ item.quantity }}
         </div>
-        <button class="new-order-button">New Order</button>
+        <button class="order-status" @click="updateCurrentStatus(order.orderId)">{{order.status}}</button>
         <div class="personal-info">
           {{ order.personalInfo.fullName }},
           {{ order.personalInfo.email }},
@@ -32,7 +32,7 @@ export default {
   name: 'DispatcherView',
   data: function () {
     return {
-      orders: null
+      orders: null,
     }
   },
   created: function () {
@@ -42,6 +42,24 @@ export default {
   methods: {
     clearQueue: function () {
       socket.emit('clearQueue');
+    },
+    updateCurrentStatus(orderKey) {
+      // Find the order based on the key (ex key = #96050)
+      let order = this.orders[orderKey];
+
+      // Update the status for the clicked order
+      if (order.status === "On the Way!") {
+        order.status = "Delivered";
+        socket.emit('updateOrder', order);
+      }
+      if (order.status === "Preparation") {
+        order.status = "On the Way!";
+        socket.emit('updateOrder', order);
+      }
+      if (order.status === "New Order") {
+        order.status = "Preparation";
+        socket.emit('updateOrder', order);
+      }
     }
   }
 }
@@ -86,7 +104,7 @@ export default {
   font-style: italic;
 }
 
-.new-order-button {
+.order-status {
   margin-left: auto;
   margin-top: -20px;
   margin-bottom: 0px;
@@ -98,7 +116,8 @@ export default {
 #dots div {
   position: absolute;
   background: black;
-  color: white;
+  color: chocolate;
+  font-weight: bold;
   border-radius: 10px;
   width:20px;
   height:20px;

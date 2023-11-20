@@ -65,15 +65,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 div {
-    background-color:darkslategray;
-    color: #fff;
-    border-radius: 5px;
-    padding: 20px;
-    font-size: 100%;
-    height: 400px;
+  background-color:darkslategray;
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 100%;
+  height: 400px;
 }
 #bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 dl {
   margin-top: -430px;

@@ -58,21 +58,28 @@
           Non-Binary
         </label>
         <br>
-        <!-- <a><br>
-          Gender: {{ selectedGender }}<br>
-          {{ burgers[0].name }}: {{ orderedBurgers[burgers[0].name] }}<br>
-          {{ burgers[1].name }}: {{ orderedBurgers[burgers[1].name] }}<br>
-          {{ burgers[2].name }}: {{ orderedBurgers[burgers[2].name] }}<br>
-          Payment Method: {{ paymentMethod }}<br>
-          Email: {{ Email }}<br>
-          Full Name: {{ fullName }}<br>
-        </a> -->
       </form>
     </section>
-    <button type="submit" v-on:click="submitForm">
-      <img src="https://th.bing.com/th/id/OIP.6KI4O9iZJg0ZFOPp4Nn5iQHaHa?w=190&h=190&c=7&r=0&o=5&pid=1.7">
-      Place my order!
-    </button>
+    <div class="placingOrder">
+      <button type="submit" v-on:click="tryToOrder">
+        <img src="https://th.bing.com/th/id/OIP.6KI4O9iZJg0ZFOPp4Nn5iQHaHa?w=190&h=190&c=7&r=0&o=5&pid=1.7">
+        Place my order!
+      </button>
+      <a id="orderMessage"></a>
+    </div>
+    <a id="receipt" v-if="showReceipt"><br>
+      Your Receipt:
+      <a v-for="(quantity, burger) in orderedBurgers">
+        <p v-if="quantity > 0" style="margin:0px">{{ burger }}: {{ quantity }}</p>
+      </a>
+      Full Name: {{ fullName }}<br>
+      Email: {{ Email }}<br>
+      Payment Method: {{ paymentMethod }}<br>
+      Gender: {{ selectedGender }}<br>
+      Order Status: {{ orders[orderId].status }}
+    </a>
+
+
   </main>
   <footer>
   
@@ -122,11 +129,76 @@ export default {
                   y: 0
                 },
       dotSize: 20,
+      showReceipt: false, /*A big problem is that the receipt can change after it's been made*/
+      orderId:0,
+      orders: null,
     }
   },
+  created: function () {
+    socket.on('allOrders', data =>
+      this.orders = data.orders);
+  },
   methods: {
+    tryToOrder() {
+      let orderInfoMissing = false;
+      let sum = 0;
+      if (this.selectedGender === null || this.Email === null || this.fullName === null
+      || this.selectedGender === "" || this.Email === "" || this.fullName === "") {
+        orderInfoMissing = true;
+      }
+      if (this.location.x === 0 && this.location.y === 0) {
+        orderInfoMissing = true;
+      }
+      for (let key in this.orderedBurgers) {
+        sum += this.orderedBurgers[key]
+      }
+      if (sum === 0) {
+        orderInfoMissing = true;
+      }
+      this.displayWhatIsMissing()
+      if (!orderInfoMissing){
+        this.submitForm()
+        this.showReceipt = true;
+      }
+      
+    },
+    displayWhatIsMissing() {
+      let missingInfo = [];
+
+      if (this.selectedGender === null || this.selectedGender === "") {
+        missingInfo.push("Gender");
+      }
+      if (this.Email === null || this.Email === "") {
+        missingInfo.push("Email");
+      }
+      if (this.fullName === null || this.fullName === "") {
+        missingInfo.push("Full Name");
+      }
+      if (this.location.x === 0 && this.location.y === 0) {
+        missingInfo.push("Delivery Location");
+      }
+      let sum = 0;
+      for (let key in this.orderedBurgers) {
+        sum += this.orderedBurgers[key];
+      }
+      if (sum === 0) {
+        missingInfo.push("Burgers");
+      }
+
+      const targetElement = document.getElementById("orderMessage");
+      if (targetElement) {
+        console.log(missingInfo)
+        if (missingInfo.length > 0) {
+          targetElement.textContent = "Order not Sent! Pleace Select: " + missingInfo.join(", ");
+          targetElement.style.color = "red"
+        } else {
+          targetElement.textContent = "Order Sent!";
+          targetElement.style.color = "green"
+        }
+      }
+    },
     submitForm() {
-      const orderDetails = {
+      let orderDetails = {
         orderId: this.getOrderNumber(),
         details: {
           x: this.location.x,
@@ -140,17 +212,18 @@ export default {
           email: this.Email,
           gender: this.selectedGender,
           paymentMethod: this.paymentMethod
-        }
+        },
+        status: "New Order"
       };
 
       socket.emit("addOrder", orderDetails);
     },
-
     addToOrder($event) {
       this.orderedBurgers[$event.name] = $event.amount;
     },
     getOrderNumber: function () {
-      return Math.floor(Math.random()*100000);
+      this.orderId = Math.floor(Math.random()*100000);
+      return this.orderId;
     },
     setLocation(event) {
       const mapRect = this.$refs.map.getBoundingClientRect();
@@ -160,9 +233,6 @@ export default {
       };
       this.updateDotPosition();
     },
-
-
-
     updateDotPosition() {
       const dot = this.$refs.dot;
       if (dot) {
@@ -170,7 +240,6 @@ export default {
         dot.style.top = this.location.y - this.dotSize / 2 + "px";
       }
     },
-
     addOrder: function (event) {
       var offset = {x: event.currentTarget.getBoundingClientRect().left,
                     y: event.currentTarget.getBoundingClientRect().top};
@@ -272,5 +341,8 @@ select {
 #Target {
   color:white;
   margin-left: 4px;
+}
+.placingOrder {
+  display: inline;
 }
 </style>

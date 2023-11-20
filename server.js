@@ -52,8 +52,20 @@ function Data() {
 Data.prototype.addOrder = function (order) {
   //Store the order in an "associative array" with orderId as key
   this.orders[order.orderId] = order;
+  console.log("Order has been added!") //Man kan se i git cmd!
 };
 
+Data.prototype.getNotYetDeliveredOrders = function () {
+  let notYetDeliveredOrders = {};
+  for (let orderId in this.orders) {
+    if (this.orders[orderId].status !== "Delivered")
+    notYetDeliveredOrders[orderId] = this.orders[orderId]
+  }
+  return notYetDeliveredOrders;
+};
+Data.prototype.removeOrder = function (order) {
+  delete this.orders[order.orderId]
+};
 Data.prototype.getAllOrders = function () {
   return this.orders;
 };
@@ -63,20 +75,34 @@ let data = new Data();
 io.on('connection', function (socket) {
 
   // Send list of orders when a client connects
-  socket.emit('currentQueue', { orders: data.getAllOrders() });
+  socket.emit('currentQueue', { orders: data.getNotYetDeliveredOrders() });
 
   // When a connected client emits an "addOrder" message
   socket.on('addOrder', function (order) {
     data.addOrder(order);
     // send updated info to all connected clients, note the use of io instead of socket
-    io.emit('currentQueue', { orders: data.getAllOrders() });
+    io.emit('currentQueue', { orders: data.getNotYetDeliveredOrders() });
+    io.emit('allOrders',{ orders: data.getAllOrders() })
   });
 
   // When a connected client emits an "clearQueue" message
   socket.on('clearQueue', function () {
     data = new Data();
     // send updated info to all connected clients, note the use of io instead of socket
-    io.emit('currentQueue', { orders: data.getAllOrders() });
+    io.emit('currentQueue', { orders: data.getNotYetDeliveredOrders() });
+  });
+  socket.on('clearThisOrder', function (order) {
+    data.removeOrder(order)
+    io.emit('currentQueue', { orders: data.getNotYetDeliveredOrders() });
+  });
+  socket.on('updateOrder', function (order) {
+    data.orders[order.orderId].status = order.status
+    io.emit('currentQueue', { orders: data.getNotYetDeliveredOrders() });
+    io.emit('allOrders',{ orders: data.getAllOrders() })
+  });
+  socket.on('getAllOrders', function () {
+    io.emit('allOrders',{ orders: data.getAllOrders() })
+
   });
 
 });
