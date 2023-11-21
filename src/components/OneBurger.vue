@@ -15,7 +15,7 @@
       <dd>
         <ul>
           <li v-for="ingredient in burger.ingredients">
-            <span v-if="ingredient === 'Gluten' || ingredient === 'Lactose'" id="bold">
+            <span v-if="ingredient === 'Gluten' || ingredient === 'Lactose'" class="bold">
               {{ ingredient }}
             </span>
             <span v-else>
@@ -72,7 +72,7 @@ div {
   font-size: 100%;
   height: 400px;
 }
-#bold {
+.bold {
   font-weight: bold;
 }
 dl {

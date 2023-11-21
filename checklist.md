@@ -64,4 +64,4 @@ Your Dispatcher.vue file:
 - [x] Allow the dispatcher to handle orders by providing buttons next to every order that can switch the order status to "in preparation" and "done"
 - [x] Display the order status to the customer and update it in the customer view if updated by the dispatcher
 - [x] Show the order status for the customer as well.
-- [ ] Find a better visualization for what orders belong to which location on the map
+- [x] Find a better visualization for what orders belong to which location on the map

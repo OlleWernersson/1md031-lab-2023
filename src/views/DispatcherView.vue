@@ -32,7 +32,7 @@
       </div>
       
     </div>
-    <div v-if="selectedOrder" 
+    <div v-if="selectedOrder && showSelectedOrder" 
     class="orderDetails"
     v-bind:style="{ left: selectedOrder.details.x+10 + 'px', top: selectedOrder.details.y-10 + 'px' }"
     >
@@ -69,6 +69,8 @@ export default {
       orders: null,
       showOrderList: true,
       selectedOrder: null,
+      showSelectedOrder: false,
+      dotColors: {},
     }
   },
   created: function () {
@@ -96,23 +98,29 @@ export default {
         order.status = "Preparation";
         socket.emit('updateOrder', order);
       }
+      this.selectedOrder = order;
+      if (this.selectedOrder.status === "Delivered") {
+        this.selectedOrder = null;
+      }
     },
     getDotColor(order) {
       const fullName = order.personalInfo.fullName.toLowerCase();
 
-      if (fullName.includes('john')) {
-        return 'blue';
-      } else if (fullName.includes('mary')) {
-        return 'pink';
-      } else {
-        return 'black'; // Default color
+      // Check if the color is already assigned for this fullName
+      if (!this.dotColors[fullName]) {
+        // Generate a random color and store it for this fullName
+        const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+        this.dotColors[fullName] = randomColor;
       }
+
+      return this.dotColors[fullName];
     },
     toggleOrderList() {
       this.showOrderList = !this.showOrderList;
     },
     showOrderDetails(order) {
       // Set the selectedOrder when a dot is clicked
+      this.showSelectedOrder = !this.showSelectedOrder;
       if (order === this.selectedOrder) {
         this.selectedOrder = null;
       }

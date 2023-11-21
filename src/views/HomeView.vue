@@ -105,7 +105,7 @@ function MenuItem(name, KCal, url, lactose, gluten, ingredients) {
 }
 
 
-let Burgers = [menu[0],menu[1],menu[2]]
+/* let Burgers = [menu[0],menu[1],menu[2]] */
 /*   new MenuItem("Fire Burger", "3000", "/img/fireburger.jpg", true, true,["Chilli"]),
   new MenuItem("Green Burger", "3000", "/img/greenburger.jpg", false, false,["Avocado","Fake Meat"]),
   new MenuItem("Halloumi Burger", "1000", "/img/halloumiburger.jpg", true, true,[])
@@ -118,7 +118,7 @@ export default {
   },
   data: function () {
     return {
-      burgers: Burgers,
+      burgers: menu,
       selectedGender: null,
       paymentMethod: "Swish",
       Email: null,
@@ -218,10 +218,10 @@ export default {
 
       socket.emit("addOrder", orderDetails);
     },
-    addToOrder($event) {
+    addToOrder: function ($event) {
       this.orderedBurgers[$event.name] = $event.amount;
     },
-    getOrderNumber: function () {
+    getOrderNumber: function() {
       this.orderId = Math.floor(Math.random()*100000);
       return this.orderId;
     },
